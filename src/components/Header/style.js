@@ -13,7 +13,7 @@ export const LinksHeader = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
-export const LinksHeaderLogo = styled(Link)`
+export const LinksHeaderLogo = styled.a`
   color: #fff;
   text-decoration: none;
   font-size: 18px;

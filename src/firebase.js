@@ -1,41 +1,69 @@
-import app from "firebase/app";
-import "firebase/database";
-import "firebase/auth";
-import "firebase/firestore";
+import app from 'firebase/app';
+import 'firebase/database';
+import 'firebase/auth';
+import 'firebase/storage';
 
-let firebaseConfig = {
-  apiKey: "AIzaSyCHePpInX3SRtGdZK90fYkPab9xqBPPxZA",
-  authDomain: "blog-react-dca7c.firebaseapp.com",
-  databaseURL: "https://blog-react-dca7c.firebaseio.com",
-  projectId: "blog-react-dca7c",
-  storageBucket: "blog-react-dca7c.appspot.com",
-  messagingSenderId: "746850718801",
-  appId: "1:746850718801:web:3f0ce07da7a2de64d6d470",
+//Configurações do seu projeto
+const firebaseConfig = {
+    apiKey: "AIzaSyCtOK6yPQ8qXqzFmLXNMF6DdhQFT5truoA",
+    authDomain: "blog2-5e894.firebaseapp.com",
+    databaseURL: "https://blog2-5e894.firebaseio.com",
+    projectId: "blog2-5e894",
+    storageBucket: "blog2-5e894.appspot.com",
+    messagingSenderId: "1068624455443",
+    appId: "1:1068624455443:web:8c3ee67d2723f56af1dce6"
 };
 
 class Firebase {
-  constructor() {
-    app.initializeApp(firebaseConfig);
-  }
+	constructor() {
+		app.initializeApp(firebaseConfig);
 
-  login(email, password) {
-    return app.auth().signInWithEmailAndPassword(email, password);
-  }
+		//Referenciando a database para acessar em outros locais
+		this.app = app.database();
 
-  async register(nome, email, password) {
-    await app.auth().createUserWithEmailAndPassword(email, password);
+		this.storage = app.storage();
+	}
 
-    const uid = app.auth().currentUser.uid;
-    return app.database().ref("usuarios").child(uid).set({
-      nome: nome,
-    });
-  }
+	login(email, password) {
+		return app.auth().signInWithEmailAndPassword(email, password);
+	}
 
-  isInitialized() {
-    return new Promise((resolve) => {
-      app.auth().onAuthStateChanged(resolve);
-    });
-  }
+	logout() {
+		return app.auth().signOut();
+	}
+
+	async register(nome, email, password) {
+		await app.auth().createUserWithEmailAndPassword(email, password);
+
+		const uid = app.auth().currentUser.uid;
+
+		return app.database().ref('usuarios').child(uid).set({
+			nome: nome
+		});
+	}
+
+	isInitialized() {
+		return new Promise((resolve) => {
+			app.auth().onAuthStateChanged(resolve);
+		});
+	}
+
+	getCurrent() {
+		return app.auth().currentUser && app.auth().currentUser.email;
+	}
+
+	getCurrentUid() {
+		return app.auth().currentUser && app.auth().currentUser.uid;
+	}
+
+	async getUserName(callback) {
+		if (!app.auth().currentUser) {
+			return null;
+		}
+
+		const uid = app.auth().currentUser.uid;
+		await app.database().ref('usuarios').child(uid).once('value').then(callback);
+	}
 }
 
 export default new Firebase();
