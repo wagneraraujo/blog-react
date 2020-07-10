@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import firebase from '../../firebase';
-
+import {Section, Article, TitleArticle} from './styles.js'
 class Home extends Component {
 	state = {
 		posts: []
@@ -27,14 +27,14 @@ class Home extends Component {
 
 	render() {
 		return (
-			<section id="post">
+			<Section>
 				{this.state.posts.map((post) => {
 					return (
-						<article key={post.key}>
+						<Article key={post.key}>
 							<header>
-								<div className="title">
+								<TitleArticle>
             <strong>{post.titulo}</strong>
-								</div>
+								</TitleArticle>
                 <img src={post.imagem} alt="Logo" />
 							</header>
 							
@@ -43,10 +43,10 @@ class Home extends Component {
 								<p>{post.descricao}</p>
 							</footer>
               
-						</article>
+						</Article>
 					);
 				})}
-			</section>
+			</Section>
 		);
 	}
 }

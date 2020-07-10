@@ -12,12 +12,18 @@ const GlobalStyle = createGlobalStyle`
 
 body{
 
+    max-width:100vw;
+    min-width:100%;
   background:white !important;
   color:#16181e;
   font-size:14px;
 font-family: 'Roboto', sans-serif;
 
 }
+  html{
+    max-width:100vw;
+    height:100%;
+  }
 
 `;
 export default GlobalStyle;
