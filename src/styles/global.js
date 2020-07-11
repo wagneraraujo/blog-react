@@ -25,5 +25,10 @@ font-family: 'Roboto', sans-serif;
     height:100%;
   }
 
+	section{
+		padding:16px
+	}
+
 `;
+
 export default GlobalStyle;
