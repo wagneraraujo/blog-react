@@ -10,7 +10,7 @@ const Header = () => {
           <S.LiOtherLinks>
             <S.AliOtherLinks to="/">Home</S.AliOtherLinks>
             <S.AliOtherLinks to="/login">Login</S.AliOtherLinks>
-            <S.AliOtherLinks to="/registro">Registro</S.AliOtherLinks>
+            <S.AliOtherLinks to="/register">Registro</S.AliOtherLinks>
             <S.AliOtherLinks to="/dashboard">Painel</S.AliOtherLinks>
           </S.LiOtherLinks>
         </S.OtherLinks>

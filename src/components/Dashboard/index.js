@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import firebase from "../../firebase";
-import { NomeUser, UserLogout } from "./styled";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -20,6 +19,7 @@ class Dashboard extends Component {
     }
 
     firebase.getUserName((info) => {
+      localStorage.nome = info.val().nome;
       this.setState({ nome: localStorage.nome });
     });
   }
@@ -28,22 +28,22 @@ class Dashboard extends Component {
     await firebase.logout().catch((error) => {
       console.log(error);
     });
-
     localStorage.removeItem("nome");
     this.props.history.push("/");
   };
+
   render() {
     return (
-      <section>
-        <NomeUser>Olá {this.state.nome}</NomeUser>
-        <Link to="/dashboard/new">Novo Post</Link>
-
-        <UserLogout>
-          Você está logado como: {firebase.getUserName()}
-          <button onClick={() => this.logout()}>Sair</button>
-        </UserLogout>
-      </section>
+      <div id="dashboard">
+        <div className="user-info">
+          <h1>Olá {this.state.nome}</h1>
+          <Link to="/dashboard/new">Novo Post</Link>
+        </div>
+        <p>Logado com: {firebase.getCurrent()}</p>
+        <button onClick={() => this.logout()}>Deslogar</button>
+      </div>
     );
   }
 }
+
 export default withRouter(Dashboard);
