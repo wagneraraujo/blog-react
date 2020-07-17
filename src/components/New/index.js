@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
-
+import firebase from "../../firebase";
 class New extends Component {
   constructor(props) {
     super(props);
@@ -12,7 +12,23 @@ class New extends Component {
 
     this.cadastrar = this.cadastrar.bind(this);
   }
-  cadastrar() {}
+  componentDidMount() {
+    if (!firebase.getCurrent()) {
+      this.props.history.replace("/login");
+      return null;
+    }
+  }
+  cadastrar(e) {
+    e.preventDefault;
+    if (
+      this.state.titulo !== "" &&
+      this.state.imagem !== "" &&
+      this.state.descricao !== ""
+    ) {
+      let posts = firebase.app.ref("posts");
+      let chave = posts.push().key;
+    }
+  }
   render() {
     return (
       <div>
