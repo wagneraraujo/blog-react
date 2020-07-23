@@ -8,31 +8,64 @@ class New extends Component {
       titulo: "",
       imagem: "",
       descricao: "",
+      alert: ''
     };
 
     this.cadastrar = this.cadastrar.bind(this);
+this.handleFile = this.handleFile.bind(this);
+this.handleuploud = this.handleuploud.bind(this)
   }
   componentDidMount() {
     if (!firebase.getCurrent()) {
       this.props.history.replace("/login");
       return null;
     }
-  }
-  cadastrar(e) {
-    e.preventDefault;
+}
+
+handleuploud = () => {}
+cadastrar = async(e) =>{
+    e.preventDefault();
     if (
       this.state.titulo !== "" &&
       this.state.imagem !== "" &&
       this.state.descricao !== ""
     ) {
-      let posts = firebase.app.ref("posts");
-      let chave = posts.push().key;
-    }
+      let posts = firebase.app.ref("post");
+let chave = posts.push().key;
+
+await posts.child(chave).set({
+titulo: this.state.titulo,
+imagem: this.state.imagem,
+descricao: this.state.descricao
+})
+
+this.props.history.push('/dashboard')
+}else{
+this.setState({alert: 'Campos vazios, não pode nenino :)'})
+}
+
+
   }
+handleFile = async(e) =>{
+const image = e.target.files[0]
+if(image.type === 'image/png' || image.type ===  'image/jpeg'){
+await this.setState({imagem:image})
+}else{
+alert('envie imagens jpg ou png')
+this.setState({imagem:null})
+return null
+}
+}
+
+
+handleuploud = async () =>{
+  const { imagem } = this.state;
+}
   render() {
     return (
       <div>
         <header>
+          <span>{this.state.alert}</span>
           <Link to="/dashboard">Voltar</Link>
         </header>
         <h3>Novo post</h3>
@@ -53,11 +86,9 @@ class New extends Component {
             <label htmlFor="">Url da imagem</label>
             <input
               id=""
-              type="text"
+              type="file"
               name=""
-              placeholder="cole a url"
-              value={this.state.imagem}
-              onChange={(e) => this.setState({ imagem: e.target.value })}
+              onChange={this.handleFile}
             />
           </div>
           <div>
