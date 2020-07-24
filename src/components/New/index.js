@@ -8,7 +8,8 @@ class New extends Component {
       titulo: "",
       imagem: "",
       descricao: "",
-      alert: ''
+      alert: '',
+      progress: 0
     };
 
     this.cadastrar = this.cadastrar.bind(this);
@@ -22,20 +23,21 @@ this.handleuploud = this.handleuploud.bind(this)
     }
 }
 
-handleuploud = () => {}
+
 cadastrar = async(e) =>{
     e.preventDefault();
     if (
       this.state.titulo !== "" &&
       this.state.imagem !== "" &&
-      this.state.descricao !== ""
+      this.state.descricao !== ""  &&
+      this.state.imagem !== null && this.state.url !== ''
     ) {
       let posts = firebase.app.ref("post");
 let chave = posts.push().key;
 
 await posts.child(chave).set({
 titulo: this.state.titulo,
-imagem: this.state.imagem,
+imagem: this.state.url,
 descricao: this.state.descricao
 })
 
@@ -50,6 +52,7 @@ handleFile = async(e) =>{
 const image = e.target.files[0]
 if(image.type === 'image/png' || image.type ===  'image/jpeg'){
 await this.setState({imagem:image})
+this.handleuploud()
 }else{
 alert('envie imagens jpg ou png')
 this.setState({imagem:null})
@@ -60,6 +63,31 @@ return null
 
 handleuploud = async () =>{
   const { imagem } = this.state;
+  const currentUid = firebase.getCurrentUid()
+
+  const uploudTaks = firebase.storage.ref(`images/${currentUid}/${imagem.name}`).put(imagem)
+
+  await uploudTaks.on('state_changed', (snapshot)=>{
+    //progresso
+    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+  this.setState({progress})    
+
+  },
+  (error) => {
+    //erro
+  },
+
+  ()=>{
+    //deu certo :)
+    firebase.storage.ref(`images/${currentUid}`)
+    .child(imagem.name).getDownloadURL()
+    .then(url => {
+      this.setState({url: url});
+    })
+  }
+  
+  
+  )
 }
   render() {
     return (
@@ -89,7 +117,9 @@ handleuploud = async () =>{
               type="file"
               name=""
               onChange={this.handleFile}
+              
             />
+            {this.state.url !== ''? <img src={this.state.url} alt={this.state.titulo} height="100" />:<progress value={this.state.progress} max="100" />}
           </div>
           <div>
             <label htmlFor="">Descrição</label>
