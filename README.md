@@ -1,9 +1,11 @@
 
 # Simple React Blog with firebase 
 - Training react.
-- After migrate class components for hoocks components
+- Class component
 - Study styled components 
 - Study firebase
+- Send image firebase storage
+- Routes
 
 
 Development...
